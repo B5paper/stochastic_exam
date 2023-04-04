@@ -1,9 +1,4 @@
-#include <string>
-#include <iostream>
-#include <vector>
-#include <algorithm>
-#include <cstdio>
-using namespace std;
+#include "file_and_encoding.h"
 
 string read_file(const string &file_path)
 {

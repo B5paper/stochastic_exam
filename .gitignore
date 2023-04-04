@@ -1,5 +1,4 @@
 .vscode
-main.exe
 aaa.txt
-parse_materials.cpp
-main.h
+*.exe
+*.o
