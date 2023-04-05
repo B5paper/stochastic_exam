@@ -5,8 +5,14 @@
 #include <algorithm>
 #include <random>
 
+void printwstr(const wchar_t *str)
+{
+    wcout << str << endl;
+}
+
 void display_unit(const Unit &unit)
 {
+    cout << "---------- unit start ----------" << endl;
     if (unit.type == "uni")
     {
         cout << "Type: uni" << endl;
@@ -29,6 +35,8 @@ void display_unit(const Unit &unit)
     {
         cout << "unrecognized unit type in display_unit function." << endl;
     }
+    cout << "---------- unit end ----------" << endl;
+    cout << endl;
 }
 
 void display_in_qa_mode(const Unit &unit)

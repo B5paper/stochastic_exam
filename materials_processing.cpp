@@ -18,9 +18,20 @@ Unit parse_unit(const vector<wstring> &lines, int line_start, int line_end, bool
         }
         else if (lines[i].substr(0, 3) == L"[u_")
         {
+            // TODO: process multiple lines
             unit.type = "uni";
-            unit.content.push_back(lines[i+1]);
-            i += 2;
+            unit.content.push_back(wstring());
+            ++i;
+            while (i <= line_end)
+            {
+                if (lines[i].substr(0, 3) == L"[u_" ||
+                    lines[i].substr(0, 6) == L"[unit]" ||
+                    lines[i].substr(0, 5) == L"[tag]")
+                    break;
+                unit.content.back().append(lines[i]);
+                unit.content.back().push_back(L'\n');
+                ++i;
+            }
         }
         else if (lines[i].substr(0, 6) == L"[unit]")
         {
