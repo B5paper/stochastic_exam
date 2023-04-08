@@ -13,6 +13,7 @@
 #include <cstdio>
 #include <cstring>
 #include <iostream>
+#include <codecvt>
 using namespace std;
 
 bool parse_args(int argc, char* argv[], string &file_path)
@@ -29,7 +30,6 @@ bool parse_args(int argc, char* argv[], string &file_path)
 vector<Unit> get_materials(string file_path)
 {
     vector<wstring> lines = read_file_to_lines(file_path);
-    // lines = filter_out_empty_lines(lines);  // 不能随便过滤空行，记忆内容中的空行不能过滤，应该由 parser 进行解析
     trim_newline(lines);
     vector<Unit> units = parse_materials(lines);
     return units;
@@ -38,12 +38,19 @@ vector<Unit> get_materials(string file_path)
 vector<WordEntry> get_words(string file_path)
 {
     vector<wstring> lines = read_file_to_lines_and_convert(file_path);
-    trim_newline(lines);
+    int i;
+    for (i = 0; i < lines.size(); ++i)
+    {
+        if (lines[i] != L"" && lines[i][0] != L'#')
+        {
+            break;
+        }
+    }
+    lines.erase(lines.begin(), lines.begin() + i);
     vector<WordEntry> words = parse_english_words(lines);
     return words;
 }
 
-#include <codecvt>
 
 int main(int argc, char* argv[])
 {
@@ -59,23 +66,18 @@ int main(int argc, char* argv[])
     std::locale utf8( std::locale(), new std::codecvt_utf8_utf16<wchar_t> );
     std::wcout.imbue(utf8);
 
-    string file_path("D:\\Documents\\Projects\\stochastic_exam\\test_data\\data_1.txt");
+    // string file_path("D:\\Documents\\Projects\\stochastic_exam\\test_data\\data_1.txt");
+    string file_path("D:\\Documents\\documents\\Language\\english_words.md");
     vector<WordEntry> words = get_words(file_path);
-    auto word = words[1];
-    for (auto &word: words)
+    vector<int> indices(words.size());
+    for (int i = 0; i < indices.size(); ++i)
+        indices[i] = i;
+    vector<int> sample_indices = random_sample(indices, 5);
+    for (int idx: sample_indices)
     {
-        wcout << word.word << endl;
-        if (word.pronunciation != L"")
-        {
-            wcout << word.pronunciation << endl;
-        }
-        wcout << word.explanation << endl;
-        if (word.eg != L"")
-        {
-            wcout << L"eg. " << word.eg << endl;
-        }
+        cout << "idx: " << idx << endl;
+        display_word_in_qa_mode(words[idx]);
         cout << endl;
     }
-    int a = 2;
     return 0;
 }

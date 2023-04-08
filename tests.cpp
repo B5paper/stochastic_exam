@@ -41,7 +41,7 @@ void test_display_in_qa_mode(vector<Unit> &units, vector<int> random_indices)
     {
         cout << "(continue to next unit...)" << endl;
         getch();
-        display_in_qa_mode(units[idx]);
+        display_unit_in_qa_mode(units[idx]);
         cout << endl;
     }
 }

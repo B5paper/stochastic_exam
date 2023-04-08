@@ -39,7 +39,8 @@ void display_unit(const Unit &unit)
     cout << endl;
 }
 
-void display_in_qa_mode(const Unit &unit)
+
+void display_unit_in_qa_mode(const Unit &unit)
 {
     // display unit in questioin and answer mode
     if (unit.type == "uni")
@@ -73,4 +74,36 @@ void display_in_qa_mode(const Unit &unit)
     {
         cout << "unrecognized unit type in display_unit function." << endl;
     }
+}
+
+
+void display_word(const WordEntry &word_entry)
+{
+    wcout << word_entry.word << endl;
+    if (word_entry.pronunciation != L"")
+    {
+        wcout << word_entry.pronunciation << endl;
+    }
+    wcout << word_entry.explanation << endl;
+    if (word_entry.eg != L"")
+    {
+        wcout << L"eg. " << word_entry.eg << endl;
+    }
+}
+
+
+void display_word_in_qa_mode(const WordEntry &word_entry)
+{
+    wcout << word_entry.word << endl;
+    getch();
+    if (word_entry.pronunciation != L"")
+    {
+        wcout << word_entry.pronunciation << endl;
+    }
+    wcout << word_entry.explanation << endl;
+    if (word_entry.eg != L"")
+    {
+        wcout << L"eg. " << word_entry.eg << endl;
+    }
+    getch();
 }

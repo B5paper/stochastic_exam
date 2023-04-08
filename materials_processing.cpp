@@ -104,7 +104,9 @@ vector<Unit> parse_materials(vector<wstring> &lines)
 }
 
 
-vector<wstring> part_of_speeches{L"adj.", L"n.", L"v.", L"vi.", L"vt.", L"verb.", 
+vector<wstring> part_of_speeches{L"adj.", L"a.", L"ad.", L"adv.",
+    L"n.", L"v.", L"vi.", L"vt.", L"verb.",
+    L"quant.", L"pron.",
     L"count-n.", L"uncount-n.", L"phrase."};
 
 vector<WordEntry> parse_english_words(vector<wstring> &lines)
@@ -112,14 +114,14 @@ vector<WordEntry> parse_english_words(vector<wstring> &lines)
     vector<WordEntry> words;
     WordEntry word_entry;
     int n = lines.size();
-    int idx_pron, idx_exp, idx_eg;  // pronunciation, explanation, e.g. 
+    int idx_prn, idx_exp, idx_eg;  // pronunciation, explanation, e.g.
     wstring exp;
     for (int i = 0; i < n; ++i)
     {
         if (lines[i] == L"")
             continue;
-        idx_pron = lines[i].find(L" pron. ");
-        idx_pron = idx_pron == string::npos ? -1 : idx_pron + 7;
+        idx_prn = lines[i].find(L" prn. ");  // pronunciation
+        idx_prn = idx_prn == string::npos ? -1 : idx_prn + 7;
         int j = 0;
         while (j < part_of_speeches.size())
         {
@@ -140,9 +142,9 @@ vector<WordEntry> parse_english_words(vector<wstring> &lines)
 
         word_entry.word = lines[i].substr(0, idx_exp - 2 - 0 + 1);
 
-        if (idx_pron != -1)
+        if (idx_prn != -1)
         {
-            word_entry.pronunciation = lines[i].substr(idx_pron, idx_exp - 2 - idx_pron + 1);
+            word_entry.pronunciation = lines[i].substr(idx_prn, idx_exp - 2 - idx_prn + 1);
         }
         else
         {
