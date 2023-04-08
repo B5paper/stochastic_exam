@@ -1,4 +1,10 @@
 #include "file_and_encoding.h"
+#include <locale>
+#include <codecvt>
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+#include <iostream>
 
 string read_file(const string &file_path)
 {
@@ -8,14 +14,74 @@ string read_file(const string &file_path)
     FILE *f = fopen(file_path.c_str(), "r");
     const int BUFSIZE = 128;
     char buf[BUFSIZE];
+    buf[BUFSIZE - 1] = '\0';  // fread() 不会把 buf 当作一个字符串，所以需要自己手动设置
     while (!feof(f))
     {
         memset(buf, 0, BUFSIZE);
-        fread(buf, BUFSIZE, 1, f);
+        fread(buf, BUFSIZE - 1, 1, f);
         txt.append(buf);
     }
     fclose(f);
     return txt;
+}
+
+vector<string> read_file_to_lines_utf8(const string &file_path)
+{
+    vector<string> lines;
+    string line;
+    const int BUFSIZE = 128;
+    char buf[BUFSIZE];
+    FILE *f = fopen(file_path.c_str(), "r");
+    if (!f)
+    {
+        cout << "fail to open the file: " << file_path << endl;
+        return lines;
+    }
+    while (!feof(f))
+    {
+        line.clear();
+        do
+        {
+            buf[BUFSIZE - 2] = '\0';
+            fgets(buf, BUFSIZE, f);
+            line.append(buf);
+        } while (buf[BUFSIZE - 2] != '\0' && buf[BUFSIZE - 2] != '\n');
+        line.erase(line.size() - 1);
+        lines.push_back(line);
+    }
+    fclose(f);
+    return lines;
+}
+
+vector<wstring> read_file_to_lines_and_convert(const string &file_path)
+{
+    vector<wstring> lines;
+    string line;
+    wstring wline;
+    const int BUFSIZE = 128;
+    char buf[BUFSIZE];
+    FILE *f = fopen(file_path.c_str(), "r");
+    if (!f)
+    {
+        cout << "fail to open the file: " << file_path << endl;
+        return lines;
+    }
+    while (!feof(f))
+    {
+        line.clear();
+        do
+        {
+            buf[BUFSIZE - 2] = '\0';
+            fgets(buf, BUFSIZE, f);
+            line.append(buf);
+        } while (buf[BUFSIZE - 2] != '\0' && buf[BUFSIZE - 2] != '\n');
+        if (line.back() == '\n')  // 文件的最后一行可能没有`\n`
+            line.erase(line.size() - 1);
+        wline = utf8_to_utf16(line);
+        lines.push_back(wline);
+    }
+    fclose(f);
+    return lines;
 }
 
 vector<wstring> read_file_to_lines_r(const string &file_path)
@@ -27,6 +93,11 @@ vector<wstring> read_file_to_lines_r(const string &file_path)
     const int BUFSIZE = 128;
     wchar_t buf[BUFSIZE];
     FILE *f = fopen(file_path.c_str(), "r");
+    if (!f)
+    {
+        cout << "fail to open the file: " << file_path << endl;
+        return lines;
+    }
     while (!feof(f))
     {
         line.clear();
@@ -53,10 +124,29 @@ vector<wstring> read_file_to_lines(const string &file_path)
 
 wstring utf8_to_utf16(const string &utf8_str)
 {
-    wstring_convert<codecvt_utf8_utf16<char16_t>, char16_t> convertor;
-    u16string dest = convertor.from_bytes(utf8_str);
-    wstring utf16_le((wchar_t*)dest.c_str());
+    wstring_convert<codecvt_utf8_utf16<wchar_t>, wchar_t> convertor;
+    wstring utf16_le = convertor.from_bytes(utf8_str);
+    // wstring utf16_le((wchar_t*)dest.c_str());
+    if (convertor.state() == codecvt_base::result::noconv)
+    {
+        cout << "source encoding and destination encoding are the same." << endl;
+    }
+    else if (convertor.state() == codecvt_base::result::error)
+    {
+        cout << "fail to convert utf8 string to utf16 string" << endl;
+    } 
+    else if (convertor.state() == codecvt_base::result::partial)
+    {
+        cout << "partially convert some characters" << endl;
+    }
     return utf16_le;
+}
+
+string utf16_to_utf8(const wstring &utf16_str)
+{
+    wstring_convert<codecvt_utf8_utf16<wchar_t>, wchar_t> convertor;
+    string utf8_str = convertor.to_bytes(utf16_str);
+    return utf8_str;
 }
 
 vector<wstring> split_to_lines(const wstring &txt)
