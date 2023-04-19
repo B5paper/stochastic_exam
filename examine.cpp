@@ -105,3 +105,46 @@ void examine_units_prev(string file_path)
     State state = State::load_state(db_path);
     examine_units_with_state(state);
 }
+
+void examine_words(string file_path, string mode)
+{
+    if (mode == "new")
+        examine_random_n_words(file_path, 7);
+    else if (mode == "prev")
+        examine_words_prev(file_path);
+    else
+    {
+        cout << "unknown mode: " << mode << endl;
+        exit(1);
+    }
+}
+
+void examine_units(string file_path, string mode)
+{
+    if (mode == "new")
+        examine_random_n_units(file_path, 3);
+    else if (mode == "prev")
+        examine_units_prev(file_path);
+    else
+    {
+        cout << "unknown mode: " << mode << endl;
+        exit(1);
+    }
+}
+
+void examine(string type, string file_path, string mode)
+{
+    if (type == "unit")
+    {
+        examine_units(file_path, mode);
+    }
+    else if (type == "word")
+    {
+        examine_words(file_path, mode);
+    }
+    else
+    {
+        cout << "unknown type: " << type << endl;
+        exit(0);
+    }
+}
