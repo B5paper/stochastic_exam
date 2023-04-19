@@ -74,6 +74,7 @@ void display_unit_in_qa_mode(const Unit &unit)
     {
         cout << "unrecognized unit type in display_unit function." << endl;
     }
+    getch();
 }
 
 
@@ -98,7 +99,7 @@ void display_word_in_qa_mode(const WordEntry &word_entry)
     getch();
     if (word_entry.pronunciation != L"")
     {
-        wcout << word_entry.pronunciation << endl;
+        wcout << L"prn. " << word_entry.pronunciation << endl;
     }
     wcout << word_entry.explanation << endl;
     if (word_entry.eg != L"")

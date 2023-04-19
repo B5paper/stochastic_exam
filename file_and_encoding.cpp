@@ -46,8 +46,10 @@ vector<string> read_file_to_lines_utf8(const string &file_path)
             fgets(buf, BUFSIZE, f);
             line.append(buf);
         } while (buf[BUFSIZE - 2] != '\0' && buf[BUFSIZE - 2] != '\n');
-        line.erase(line.size() - 1);
-        lines.push_back(line);
+        if (line.back() == '\n')  // 文件的最后一行可能没有`\n`
+            line.erase(line.size() - 1);
+        if (!feof(f))  // 如果最后一行是正常读取，那么不会触发 eof。只有再次读取后，才会触发 eof
+            lines.push_back(line);
     }
     fclose(f);
     return lines;
@@ -66,19 +68,24 @@ vector<wstring> read_file_to_lines_and_convert(const string &file_path)
         cout << "fail to open the file: " << file_path << endl;
         return lines;
     }
+    int i = 0;
     while (!feof(f))
     {
+        ++i;
         line.clear();
         do
         {
             buf[BUFSIZE - 2] = '\0';
             fgets(buf, BUFSIZE, f);
             line.append(buf);
-        } while (buf[BUFSIZE - 2] != '\0' && buf[BUFSIZE - 2] != '\n');
+        } while (buf[BUFSIZE - 2] != '\0' && buf[BUFSIZE - 2] != '\n' && !feof(f));
         if (line.back() == '\n')  // 文件的最后一行可能没有`\n`
             line.erase(line.size() - 1);
-        wline = utf8_to_utf16(line);
-        lines.push_back(wline);
+        if (!feof(f))  // 如果最后一行是正常读取，那么不会触发 eof。只有再次读取后，才会触发 eof
+        {
+            wline = utf8_to_utf16(line);
+            lines.push_back(wline);
+        }
     }
     fclose(f);
     return lines;
@@ -171,6 +178,27 @@ void trim_newline(vector<wstring> &lines)
         if (lines[i].back() == L'\n')
             lines[i].erase(lines[i].length() - 1);
     }
+}
+
+string get_dir(string file_path)
+{
+    int n = file_path.size();
+    int i = n - 1;
+    while (i > -1 && file_path[i] != '\\')
+        --i;
+    return file_path.substr(0, i);
+}
+
+string get_base_name(string file_path)
+{
+    int n = file_path.size();
+    int i = n - 1;
+    while (i > -1 && file_path[i] != '\\')
+        --i;
+    int j = n - 1;
+    while (j > -1 && file_path[j] != '.')
+        --j;
+    return file_path.substr(i+1, j-(i+1));
 }
 
 

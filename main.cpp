@@ -3,6 +3,8 @@
 #include "sample.h"
 #include "file_and_encoding.h"
 #include "display.h"
+#include "state.h"
+#include "examine.h"
 #include <algorithm>
 #include <vector>
 #include <unordered_set>
@@ -16,68 +18,106 @@
 #include <codecvt>
 using namespace std;
 
-bool parse_args(int argc, char* argv[], string &file_path)
+unordered_map<string, string> parse_args(int argc, char* argv[])
 {
-    if (argc != 2)
+    /*
+        --file <file_path>
+        --type {word | unit}
+        --mode {prev | new}
+        --db <file_path>
+    */
+    unordered_map<string, string> args;
+    for (int i = 1; i < argc; ++i)
     {
-        cout << "Please input a file name." << endl;
-        return false;
-    }
-    file_path.assign(argv[1]);
-    return true;
-}
-
-vector<Unit> get_materials(string file_path)
-{
-    vector<wstring> lines = read_file_to_lines(file_path);
-    trim_newline(lines);
-    vector<Unit> units = parse_materials(lines);
-    return units;
-}
-
-vector<WordEntry> get_words(string file_path)
-{
-    vector<wstring> lines = read_file_to_lines_and_convert(file_path);
-    int i;
-    for (i = 0; i < lines.size(); ++i)
-    {
-        if (lines[i] != L"" && lines[i][0] != L'#')
+        if (argv[i] == string("--file"))
         {
-            break;
+            args.insert(make_pair("file", argv[i+1]));
+        }
+        if (argv[i] == string("--type"))
+        {
+            args.insert(make_pair("type", argv[i+1]));
+        }
+        if (argv[i] == string("--mode"))
+        {
+            args.insert(make_pair("mode", argv[i+1]));
+        }
+        if (argv[i] == string("--db"))
+        {
+            args.insert(make_pair("db", argv[i+1]));
         }
     }
-    lines.erase(lines.begin(), lines.begin() + i);
-    vector<WordEntry> words = parse_english_words(lines);
-    return words;
+
+    bool exist_db = false;
+    if (args.find("mode") == args.end())
+        args["mode"] = "prev";
+    if (args.find("db") != args.end())
+        exist_db = true;
+    if (args["mode"] == "prev" && !exist_db)
+    {
+        cout << "please input a database file path" << endl;
+        exit(1);
+    }
+    return args;
 }
 
-
-int main(int argc, char* argv[])
+void init_wide_char_environment()
 {
-    // parse_args(argc, argv, file_path);
-    // string file_path("D:\\Documents\\Projects\\stochastic_exam\\test_data\\data_2.txt");
-    // vector<Unit> units = get_materials(file_path);
-    // display_unit(units[0]);
-    // vector<int> indices_with_tag = select_tags(units, {L"b", L"c"}, "all");
-    // auto v = move(random_sample({1, 2,3,4,5,6,7}, 4));
-
     // wchar environment initializaiton
     std::ios_base::sync_with_stdio(false);
     std::locale utf8( std::locale(), new std::codecvt_utf8_utf16<wchar_t> );
     std::wcout.imbue(utf8);
-
-    // string file_path("D:\\Documents\\Projects\\stochastic_exam\\test_data\\data_1.txt");
-    string file_path("D:\\Documents\\documents\\Language\\english_words.md");
-    vector<WordEntry> words = get_words(file_path);
-    vector<int> indices(words.size());
-    for (int i = 0; i < indices.size(); ++i)
-        indices[i] = i;
-    vector<int> sample_indices = random_sample(indices, 5);
-    for (int idx: sample_indices)
-    {
-        cout << "idx: " << idx << endl;
-        display_word_in_qa_mode(words[idx]);
-        cout << endl;
-    }
-    return 0;
 }
+
+// english words: "D:\\Documents\\documents\\Language\\english_words.md"
+// data_2: "D:\\Documents\\Projects\\stochastic_exam\\test_data\\data_2.txt"
+
+int main(int argc, char* argv[])
+{
+    unordered_map<string, string> args = parse_args(argc, argv);
+    for (auto &[key, val]: args)
+    {
+        cout << "key: " << key << ", val: " << val << endl;
+    }
+    
+    init_wide_char_environment();
+
+    string file_path = args["file"];
+    if (args["type"] == "unit")
+    {
+        if (args["mode"] == "new")
+            examine_random_n_units(file_path, 3);
+        else if (args["mode"] == "prev")
+            examine_units_prev(file_path);
+        else
+        {
+            cout << "unknown mode: " << args["mode"] << endl;
+            exit(1);
+        }
+    }
+    else if (args["type"] == "word")
+    {
+        if (args["mode"] == "new")
+            examine_random_n_words(file_path, 7);
+        else if (args["mode"] == "prev")
+            examine_words_prev(file_path);
+        else
+        {
+            cout << "unknown mode: " << args["mode"] << endl;
+            exit(1);
+        }
+    }
+    else
+    {
+        cout << "unknown type" << endl;
+        exit(0);
+    }
+    return  0;
+}
+
+// todo:
+
+// 1. 进入程序时可以选择复习上次的或对新的进行采样
+
+// 1. 用数据库记录每次复习的 idx 列表以及这个列表对应的哈希，记录一共复习的次数，以及上次复习的时间。进入程序时，可以通过手动选择哈希值表示复习某一次的内容。可以选择删除哈希及其对应的 idx 列表。
+
+// 1. 
