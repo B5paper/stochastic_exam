@@ -42,6 +42,9 @@ void examine_random_n_words(string file_path, int n)
         display_word_in_qa_mode(words[idx]);
         cout << endl;
     }
+    State state;
+    state.set_state(file_path, sample_indices);
+    state.save_state();
 }
 
 void examine_random_n_units(string file_path, int n, vector<wstring> tags = {}, string mode = "any")
@@ -58,11 +61,14 @@ void examine_random_n_units(string file_path, int n, vector<wstring> tags = {}, 
         display_unit_in_qa_mode(units[idx]);
         cout << endl;
     }
+    State state;
+    state.set_state(file_path, sample_indices);
+    state.save_state();
 }
 
 void examine_units_with_state(State state)
 {
-    cout << "previous state date: " << state.date.get_date_str() << endl;
+    cout << "previous state date: " << state.date.get_date_str() << endl << endl;
     string file_path = state.file_path;
     vector<int> sample_indices = state.indices;
     vector<Unit> units = get_materials(file_path);
@@ -76,7 +82,7 @@ void examine_units_with_state(State state)
 
 void examine_words_with_state(State state)
 {
-    cout << "previous state date: " << state.date.get_date_str() << endl;
+    cout << "previous state date: " << state.date.get_date_str() << endl << endl;
     string file_path = state.file_path;
     vector<int> sample_indices = state.indices;
     vector<WordEntry> words = get_words(file_path);
@@ -90,18 +96,14 @@ void examine_words_with_state(State state)
 
 void examine_words_prev(string file_path)
 {
-    string dir = get_dir(file_path);
-    string base_name = get_base_name(file_path);
-    string db_path = dir + '\\' + base_name + State::suffix;
+    string db_path = State::get_db_path_from_file_path(file_path);
     State state = State::load_state(db_path);
     examine_words_with_state(state);
 }
 
 void examine_units_prev(string file_path)
 {
-    string dir = get_dir(file_path);
-    string base_name = get_base_name(file_path);
-    string db_path = dir + '\\' + base_name + State::suffix;
+    string db_path = State::get_db_path_from_file_path(file_path);
     State state = State::load_state(db_path);
     examine_units_with_state(state);
 }

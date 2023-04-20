@@ -160,3 +160,11 @@ State State::load_state(string db_path)
     state.indices = move(indices);
     return state;
 }
+
+string State::get_db_path_from_file_path(string file_path)
+{
+    string dir = get_dir(file_path);
+    string base_name = get_base_name(file_path);
+    string db_path = dir + '\\' + base_name + suffix;
+    return db_path;
+}

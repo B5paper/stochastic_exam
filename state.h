@@ -24,6 +24,7 @@ struct State
     void set_state(string file_path, vector<int> indices);
     void save_state();
     static State load_state(string db_path);
+    static string get_db_path_from_file_path(string file_path);
     static const string suffix;
     static const string delimiter;
 };
