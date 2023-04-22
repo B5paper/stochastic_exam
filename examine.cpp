@@ -47,7 +47,7 @@ void examine_random_n_words(string file_path, int n)
     state.save_state();
 }
 
-void examine_random_n_units(string file_path, int n, vector<wstring> tags = {}, string mode = "any")
+void examine_random_n_units(string file_path, int n, vector<wstring> tags, string mode)
 {
     vector<Unit> units = get_materials(file_path);
     vector<int> indices(units.size());
@@ -114,6 +114,8 @@ void examine_words(string file_path, string mode)
         examine_random_n_words(file_path, 7);
     else if (mode == "prev")
         examine_words_prev(file_path);
+    else if (mode == "prev_rand")
+        examine_words_prev_rand(file_path);
     else
     {
         cout << "unknown mode: " << mode << endl;
@@ -127,6 +129,8 @@ void examine_units(string file_path, string mode)
         examine_random_n_units(file_path, 3);
     else if (mode == "prev")
         examine_units_prev(file_path);
+    else if (mode == "prev_rand")
+        examine_units_prev_rand(file_path);
     else
     {
         cout << "unknown mode: " << mode << endl;
@@ -149,4 +153,21 @@ void examine(string type, string file_path, string mode)
         cout << "unknown type: " << type << endl;
         exit(0);
     }
+}
+
+
+void examine_words_prev_rand(string file_path)
+{
+    string db_path = State::get_db_path_from_file_path(file_path);
+    State state = State::load_state(db_path);
+    shuffle(state.indices);
+    examine_words_with_state(state);
+}
+
+void examine_units_prev_rand(string file_path)
+{
+    string db_path = State::get_db_path_from_file_path(file_path);
+    State state = State::load_state(db_path);
+    shuffle(state.indices);
+    examine_units_with_state(state);
 }

@@ -90,3 +90,8 @@ vector<int> select_tags(vector<Unit> &units, vector<wstring> tags, string mode)
     }
     return selected_indices;
 }
+
+void shuffle(vector<int> &indices)
+{
+    shuffle(indices.begin(), indices.end(), mt19937{random_device{}()});
+}

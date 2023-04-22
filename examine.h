@@ -12,6 +12,8 @@ void examine_units_with_state(State state);
 void examine_words_with_state(State state);
 void examine_words_prev(string file_path);
 void examine_units_prev(string file_path);
+void examine_words_prev_rand(string file_path);
+void examine_units_prev_rand(string file_path);
 void examine_words(string file_path, string mode);
 void examine_units(string file_path, string mode);
 void examine(string type, string file_path, string mode);

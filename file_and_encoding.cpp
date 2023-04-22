@@ -35,6 +35,7 @@ vector<string> read_file_to_lines_utf8(const string &file_path)
     if (!f)
     {
         cout << "fail to open the file: " << file_path << endl;
+        exit(1);
         return lines;
     }
     while (!feof(f))
