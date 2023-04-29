@@ -49,6 +49,9 @@ vector<string> read_file_to_lines_utf8(const string &file_path)
         } while (buf[BUFSIZE - 2] != '\0' && buf[BUFSIZE - 2] != '\n');
         if (line.back() == '\n')  // 文件的最后一行可能没有`\n`
             line.erase(line.size() - 1);
+        // 这里有 bug，有时间研究一下
+        // 如果一个文件只有一行，并且没有 \n，那么 fgets() 会触发 eof
+        // 紧接着 !feof() 为 false，从而跳过 if 语句，什么都读不到
         if (!feof(f))  // 如果最后一行是正常读取，那么不会触发 eof。只有再次读取后，才会触发 eof
             lines.push_back(line);
     }

@@ -2,7 +2,6 @@
 #include "file_and_encoding.h"
 #include "display.h"
 #include "sample.h"
-#include "state.h"
 #include <iostream>
 
 vector<Unit> get_materials(string file_path)
@@ -140,6 +139,7 @@ void examine_units(string file_path, string mode)
 
 void examine(string type, string file_path, string mode)
 {
+    cout << "[start exam] [mode: " << mode << "]" << endl;
     if (type == "unit")
     {
         examine_units(file_path, mode);
@@ -170,4 +170,9 @@ void examine_units_prev_rand(string file_path)
     State state = State::load_state(db_path);
     shuffle(state.indices);
     examine_units_with_state(state);
+}
+
+void examine(ExamInfo &exam_info)
+{
+    examine(exam_info.type, exam_info.file_path, exam_info.mode);
 }

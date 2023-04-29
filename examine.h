@@ -4,6 +4,13 @@
 #include "state.h"
 using namespace std;
 
+struct ExamInfo
+{
+    string type;
+    string file_path;
+    string mode;
+};
+
 vector<Unit> get_materials(string file_path);
 vector<WordEntry> get_words(string file_path);
 void examine_random_n_words(string file_path, int n);
@@ -16,6 +23,8 @@ void examine_words_prev_rand(string file_path);
 void examine_units_prev_rand(string file_path);
 void examine_words(string file_path, string mode);
 void examine_units(string file_path, string mode);
+// void examine_domain(string domain);
 void examine(string type, string file_path, string mode);
+void examine(ExamInfo &exam_info);
 
 #endif
