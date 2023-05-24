@@ -3,3 +3,4 @@
 *.o
 test_data/
 domain_db_path.txt
+domain_db.txt

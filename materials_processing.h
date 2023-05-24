@@ -7,7 +7,9 @@ using namespace std;
 struct Unit
 {
     string type;  // "uni" for unidirection, "mut" for mutual direction
+    wstring title;
     vector<wstring> tags;
+    vector<wstring> deps;
     vector<wstring> content;
 };
 

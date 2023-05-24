@@ -17,7 +17,6 @@ void init_wide_char_environment()
     std::wcout.imbue(utf8);
 }
 
-
 int main(int argc, char* argv[])
 {
     unordered_map<string, string> args = parse_args(argc, argv);

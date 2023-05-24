@@ -33,9 +33,23 @@ Unit parse_unit(const vector<wstring> &lines, int line_start, int line_end, bool
                 ++i;
             }
         }
-        else if (lines[i].substr(0, 6) == L"[unit]")
+        else if (lines[i].substr(0, 7) == L"[title]")
         {
-            ++i;
+            unit.title = lines[i+1];
+            i += 2;
+        }
+        else if (lines[i].substr(0, 6) == L"[deps]")
+        {
+            j = i + 1;
+            end = (int) lines.size() - 1;
+            while (j <= end)
+            {
+                if (lines[j][0] == L'[' && lines[j].back() == L']')
+                    break;
+                unit.deps.push_back(lines[j]);
+                ++j;
+            }
+            i = j;
         }
         else if (lines[i].substr(0, 5) == L"[tag]")
         {
@@ -54,12 +68,18 @@ Unit parse_unit(const vector<wstring> &lines, int line_start, int line_end, bool
             }
             i += 2;
         }
+        else if (lines[i].substr(0, 6) == L"[unit]")
+        {
+            ++i;
+        }
         else
         {
+            cout << "i = " << i << endl;
             wcout << L"unrecognized label: " << lines[i] << endl;
             valid_unit = false;
             return unit;
         }
+        
     }
     valid_unit = true;
     return unit;
