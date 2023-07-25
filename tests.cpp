@@ -2,7 +2,7 @@
 #include "display.h"
 #include "sample.h"
 #include <iostream>
-#include <conio.h>
+// #include <conio.h>
 using namespace std;
 
 void test_parse_file()
@@ -40,7 +40,7 @@ void test_display_in_qa_mode(vector<Unit> &units, vector<int> random_indices)
     for (int idx: random_indices)
     {
         cout << "(continue to next unit...)" << endl;
-        getch();
+        getchar();
         display_unit_in_qa_mode(units[idx]);
         cout << endl;
     }

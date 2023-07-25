@@ -3,6 +3,7 @@
 #include <iostream>
 #include <cstring>
 #include <ctime>
+#include "system_info.h"
 
 // Date::Date(int year, int month, int day, int hour, int minute)
 // {
@@ -93,14 +94,14 @@ void State::save_state()
 
     string suffix = "_exam_db";
     int i = file_path.size() - 1;
-    while (i >= 0 && file_path[i] != '\\')
+    while (i >= 0 && file_path[i] != os_path_sep)
         --i;
     string dir = file_path.substr(0, i);
     int j = file_path.size() - 1;
     while (j >= 0 && file_path[j] != '.')
         --j;
     string base_name = file_path.substr(i+1, j - (i+2) + 1);
-    string new_file_path = dir + "\\" + base_name + suffix;
+    string new_file_path = dir + os_path_sep + base_name + suffix;
     FILE *f = fopen(new_file_path.c_str(), "a");  // is "a" correct?
     if (!f)
     {
@@ -165,6 +166,6 @@ string State::get_db_path_from_file_path(string file_path)
 {
     string dir = get_dir(file_path);
     string base_name = get_base_name(file_path);
-    string db_path = dir + '\\' + base_name + suffix;
+    string db_path = dir + os_path_sep + base_name + suffix;
     return db_path;
 }

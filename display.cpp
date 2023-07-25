@@ -1,7 +1,7 @@
 #include "display.h"
 #include "materials_processing.h"
 #include <iostream>
-#include <conio.h>
+// #include <conio.h>
 #include <algorithm>
 #include <random>
 
@@ -50,7 +50,7 @@ void display_unit_in_qa_mode(const Unit &unit)
         wcout << unit.content[0] << endl;
         for (int i = 1; i < unit.content.size(); ++i)
         {
-            getch();
+            getchar();
             cout << "Node " << i << ":" << endl;
             wcout << unit.content[i] << endl;
         }
@@ -65,7 +65,7 @@ void display_unit_in_qa_mode(const Unit &unit)
             mt19937{random_device{}()});
         for (int i: shuffled_indices)
         {
-            getch();
+            getchar();
             cout << "Node " << i << ": " << endl;
             wcout << unit.content[i] << endl;
         }
@@ -74,7 +74,7 @@ void display_unit_in_qa_mode(const Unit &unit)
     {
         cout << "unrecognized unit type in display_unit function." << endl;
     }
-    getch();
+    getchar();
 }
 
 
@@ -96,7 +96,7 @@ void display_word(const WordEntry &word_entry)
 void display_word_in_qa_mode(const WordEntry &word_entry)
 {
     wcout << word_entry.word << endl;
-    getch();
+    getchar();
     if (word_entry.pronunciation != L"")
     {
         wcout << L"prn. " << word_entry.pronunciation << endl;
@@ -106,5 +106,5 @@ void display_word_in_qa_mode(const WordEntry &word_entry)
     {
         wcout << L"eg. " << word_entry.eg << endl;
     }
-    getch();
+    getchar();
 }

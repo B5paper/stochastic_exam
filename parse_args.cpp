@@ -1,6 +1,9 @@
 #include "parse_args.h"
 #include "file_and_encoding.h"
 #include <iostream>
+#include "system_info.h"
+
+extern char os_path_sep;
 
 unordered_map<string, string> parse_args(int argc, char* argv[])
 {
@@ -43,6 +46,8 @@ unordered_map<string, string> parse_args(int argc, char* argv[])
 vector<DomainInfo> parse_domain_db(string domain_db_path)
 {
     vector<string> lines = read_file_to_lines_utf8(domain_db_path);
+    string dir_path = get_dir(domain_db_path);
+    string file_path;
     vector<DomainInfo> domain_infos;
     for (int i = 0; i < lines.size(); ++i)
     {
@@ -57,7 +62,8 @@ vector<DomainInfo> parse_domain_db(string domain_db_path)
         ++j;
         start = j;
         while (j < line.size() && line[j] != ',') ++j;
-        domain_info.file_path = line.substr(start, (j-1) - start + 1);
+        file_path = line.substr(start, (j-1) - start + 1);
+        domain_info.file_path = dir_path + os_path_sep + file_path;
         domain_info.type = line.substr(j+1);
         domain_infos.push_back(domain_info);
     }
@@ -92,7 +98,7 @@ ExamInfo select_domain(vector<DomainInfo> domain_infos)
 ExamInfo fill_exam_info_interactively(string exe_path)
 {
     string exe_dir_path = get_dir(exe_path);
-    string default_file_path = exe_dir_path + "\\domain_db_path.txt";
+    string default_file_path = exe_dir_path + os_path_sep + "domain_db_path.txt";
     // if (exist(default_file_path))
     // {
     //     string domain_db_path = read_file_to_lines_utf8(default_file_path)[0];
@@ -107,6 +113,12 @@ ExamInfo fill_exam_info_interactively(string exe_path)
     //     fwrite(domain_db_path);
     // }
     vector<string> lines = read_file_to_lines_utf8(default_file_path);
+    // 这个地方有 bug。如果 domain_db_path.txt 只有一行，并且没有换行，那么第一行不会读取出来
+    if (lines.empty())
+    {
+        cout << "The content of file " << default_file_path << " is empty." << endl;
+        exit(-1);
+    }
     string domain_db_path = lines[0];
     vector<DomainInfo> domain_infos = parse_domain_db(domain_db_path);
     

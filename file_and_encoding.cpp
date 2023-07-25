@@ -5,6 +5,9 @@
 #include <cstring>
 #include <algorithm>
 #include <iostream>
+#include "system_info.h"
+
+extern char os_path_sep;
 
 string read_file(const string &file_path)
 {
@@ -70,7 +73,7 @@ vector<wstring> read_file_to_lines_and_convert(const string &file_path)
     if (!f)
     {
         cout << "fail to open the file: " << file_path << endl;
-        return lines;
+        exit(-1);
     }
     int i = 0;
     while (!feof(f))
@@ -138,15 +141,15 @@ wstring utf8_to_utf16(const string &utf8_str)
     wstring_convert<codecvt_utf8_utf16<wchar_t>, wchar_t> convertor;
     wstring utf16_le = convertor.from_bytes(utf8_str);
     // wstring utf16_le((wchar_t*)dest.c_str());
-    if (convertor.state() == codecvt_base::result::noconv)
+    if (convertor.state().__value.__wch == codecvt_base::result::noconv)
     {
         cout << "source encoding and destination encoding are the same." << endl;
     }
-    else if (convertor.state() == codecvt_base::result::error)
+    else if (convertor.state().__value.__wch == codecvt_base::result::error)
     {
         cout << "fail to convert utf8 string to utf16 string" << endl;
     } 
-    else if (convertor.state() == codecvt_base::result::partial)
+    else if (convertor.state().__value.__wch == codecvt_base::result::partial)
     {
         cout << "partially convert some characters" << endl;
     }
@@ -188,8 +191,11 @@ string get_dir(string file_path)
 {
     int n = file_path.size();
     int i = n - 1;
-    while (i > -1 && file_path[i] != '\\')
+    while (i > -1 && file_path[i] != os_path_sep)
         --i;
+    // if the file_path is merely a file name, the dir path should be .
+    if (i == -1)
+        return ".";
     return file_path.substr(0, i);
 }
 
@@ -197,7 +203,7 @@ string get_base_name(string file_path)
 {
     int n = file_path.size();
     int i = n - 1;
-    while (i > -1 && file_path[i] != '\\')
+    while (i > -1 && file_path[i] != os_path_sep)
         --i;
     int j = n - 1;
     while (j > -1 && file_path[j] != '.')
