@@ -130,6 +130,10 @@ void examine_units(string file_path, string mode)
         examine_units_prev(file_path);
     else if (mode == "prev_rand")
         examine_units_prev_rand(file_path);
+    else if (mode == "seq")
+    {
+        examine_units_seq(file_path);
+    }
     else
     {
         cout << "unknown mode: " << mode << endl;
@@ -170,6 +174,22 @@ void examine_units_prev_rand(string file_path)
     State state = State::load_state(db_path);
     shuffle(state.indices);
     examine_units_with_state(state);
+}
+
+void examine_units_seq(string file_path)
+{
+    vector<Unit> units = get_materials(file_path);
+    vector<int> indices(units.size());
+    for (int i = 0; i < indices.size(); ++i)
+        indices[i] = i;
+    vector<int> sample_indices = indices;
+    // vector<int> indices_with_tag = select_tags(units, {L"b", L"c"}, "all");
+    for (int idx: sample_indices)
+    {
+        cout << "idx: " << idx << endl;
+        display_unit_in_qa_mode(units[idx]);
+        cout << endl;
+    }
 }
 
 void examine(ExamInfo &exam_info)

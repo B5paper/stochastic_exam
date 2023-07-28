@@ -11,7 +11,7 @@ unordered_map<string, string> parse_args(int argc, char* argv[])
         --domain -> 列出可用 domain，要求选择一项 (自动补全 --type) -> 选择 mode (默认为 prev)
         --file <file_path>
         --type {word | unit}
-        --mode {prev | new | prev_rand}
+        --mode {prev | new | prev_rand | seq}
     */
     unordered_map<string, string> args;
     args["exe_path"] = argv[0];
@@ -131,15 +131,15 @@ ExamInfo fill_exam_info_interactively(string exe_path)
 string select_mode()
 {
     string mode;
-    vector<string> mode_candidates{"new", "prev", "prev_rand"};
-    cout << "Select a mode: (input the mode name) [default: prev]" << endl;
+    vector<string> mode_candidates{"new", "prev", "prev_rand", "seq"};
+    cout << "Select a mode: (input the mode name) [default: seq]" << endl;
     for (int i = 0; i < mode_candidates.size(); ++i)
     {
         cout << i << ": " << mode_candidates[i] << endl;
     }
     cin >> mode;
     if (mode.empty())
-        mode = "prev";
+        mode = "seq";
     return mode;
 }
 

@@ -43,7 +43,9 @@ or
 
 * `--type`: `{word | unit}`
 
-* `--mode`: `{prev | new | prev_rand}`, default: `prev`
+* `--mode`: `{prev | new | prev_rand | seq}`, default: `seq`
+
+    If you choose `seq`, the test unit will be displayed one by one in order.
 
 `domain_db_path.txt` example:
 

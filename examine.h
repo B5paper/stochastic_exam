@@ -23,6 +23,7 @@ void examine_words_prev_rand(string file_path);
 void examine_units_prev_rand(string file_path);
 void examine_words(string file_path, string mode);
 void examine_units(string file_path, string mode);
+void examine_units_seq(string file_path);
 // void examine_domain(string domain);
 void examine(string type, string file_path, string mode);
 void examine(ExamInfo &exam_info);

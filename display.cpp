@@ -42,15 +42,23 @@ void display_unit(const Unit &unit)
 
 void display_unit_in_qa_mode(const Unit &unit)
 {
+    int ch;
+    while ((ch = getchar()) != '\n' && ch != EOF) continue;
+
     // display unit in questioin and answer mode
     if (unit.type == "uni")
     {
         cout << "Type: uni" << endl;
         cout << "Node 0:" << endl;
         wcout << unit.content[0] << endl;
+        
         for (int i = 1; i < unit.content.size(); ++i)
         {
-            getchar();
+            // An "Enter" key will generate \n (10) and \r (13) two characters,
+            // and the last getchar() only consumes \n, leaving \r in stdin buffer.
+            // the next line will consume the remaining \r, and waits for the next \n
+            while ((ch = getchar()) != '\n' && ch != EOF) continue;  // clear the stdin buffer
+            // getchar();  // seems to be redundant
             cout << "Node " << i << ":" << endl;
             wcout << unit.content[i] << endl;
         }
@@ -74,7 +82,8 @@ void display_unit_in_qa_mode(const Unit &unit)
     {
         cout << "unrecognized unit type in display_unit function." << endl;
     }
-    getchar();
+    while ((ch = getchar()) != '\n' && ch != EOF) continue;
+    // getchar();
 }
 
 

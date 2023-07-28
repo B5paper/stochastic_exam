@@ -76,6 +76,7 @@ Unit parse_unit(const vector<wstring> &lines, int line_start, int line_end, bool
         {
             cout << "i = " << i << endl;
             wcout << L"unrecognized label: " << lines[i] << endl;
+            exit(-1);
             valid_unit = false;
             return unit;
         }
