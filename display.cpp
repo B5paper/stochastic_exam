@@ -40,7 +40,7 @@ void display_unit(const Unit &unit)
 }
 
 
-void display_unit_in_qa_mode(const Unit &unit)
+void display_unit_in_qa_mode(const Unit &unit, char &ctl)
 {
     int ch;
     while ((ch = getchar()) != '\n' && ch != EOF) continue;
@@ -82,7 +82,11 @@ void display_unit_in_qa_mode(const Unit &unit)
     {
         cout << "unrecognized unit type in display_unit function." << endl;
     }
-    while ((ch = getchar()) != '\n' && ch != EOF) continue;
+    // while ((ch = getchar()) != '\n' && ch != EOF) continue;
+    do {
+        ch = getchar();
+        ctl = ch;
+    } while (ch != '\n' && ch != 'r' && ch != EOF);
     // getchar();
 }
 

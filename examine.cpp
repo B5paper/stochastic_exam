@@ -54,10 +54,13 @@ void examine_random_n_units(string file_path, int n, vector<wstring> tags, strin
         indices[i] = i;
     vector<int> sample_indices = random_sample(indices, n);
     // vector<int> indices_with_tag = select_tags(units, {L"b", L"c"}, "all");
-    for (int idx: sample_indices) 
+    char ctl;
+    int idx;
+    for (int i = 0; i < sample_indices.size(); ++i) 
     {
+        idx = sample_indices[i];
         cout << "idx: " << idx << endl;
-        display_unit_in_qa_mode(units[idx]);
+        display_unit_in_qa_mode(units[idx], ctl);
         cout << endl;
     }
     State state;
@@ -71,10 +74,13 @@ void examine_units_with_state(State state)
     string file_path = state.file_path;
     vector<int> sample_indices = state.indices;
     vector<Unit> units = get_materials(file_path);
-    for (int idx: sample_indices) 
+    char ctl;
+    int idx;
+    for (int i = 0; i < sample_indices.size(); ++i) 
     {
+        idx = sample_indices[i];
         cout << "idx: " << idx << endl;
-        display_unit_in_qa_mode(units[idx]);
+        display_unit_in_qa_mode(units[idx], ctl);
         cout << endl;
     }
 }
@@ -184,10 +190,14 @@ void examine_units_seq(string file_path)
         indices[i] = i;
     vector<int> sample_indices = indices;
     // vector<int> indices_with_tag = select_tags(units, {L"b", L"c"}, "all");
-    for (int idx: sample_indices)
+    char ctl;
+    int idx;
+    for (int i = 0; i < sample_indices.size(); ++i)
     {
+        idx = sample_indices[i];
         cout << "idx: " << idx << endl;
-        display_unit_in_qa_mode(units[idx]);
+        display_unit_in_qa_mode(units[idx], ctl);
+        if (ctl == 'r') --i;
         cout << endl;
     }
 }

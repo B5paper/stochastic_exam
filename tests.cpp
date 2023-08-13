@@ -37,11 +37,12 @@ void test_select_random_units(vector<Unit> &units)
 void test_display_in_qa_mode(vector<Unit> &units, vector<int> random_indices)
 {
     cout << "------ display in qa mode ------" << endl;
+    char ctl;
     for (int idx: random_indices)
     {
         cout << "(continue to next unit...)" << endl;
         getchar();
-        display_unit_in_qa_mode(units[idx]);
+        display_unit_in_qa_mode(units[idx], ctl);
         cout << endl;
     }
 }
