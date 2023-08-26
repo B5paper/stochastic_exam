@@ -141,18 +141,18 @@ wstring utf8_to_utf16(const string &utf8_str)
     wstring_convert<codecvt_utf8_utf16<wchar_t>, wchar_t> convertor;
     wstring utf16_le = convertor.from_bytes(utf8_str);
     // wstring utf16_le((wchar_t*)dest.c_str());
-    if (convertor.state().__value.__wch == codecvt_base::result::noconv)
-    {
-        cout << "source encoding and destination encoding are the same." << endl;
-    }
-    else if (convertor.state().__value.__wch == codecvt_base::result::error)
-    {
-        cout << "fail to convert utf8 string to utf16 string" << endl;
-    } 
-    else if (convertor.state().__value.__wch == codecvt_base::result::partial)
-    {
-        cout << "partially convert some characters" << endl;
-    }
+    // if (convertor.state().__value.__wch == codecvt_base::result::noconv)
+    // {
+    //     cout << "source encoding and destination encoding are the same." << endl;
+    // }
+    // else if (convertor.state().__value.__wch == codecvt_base::result::error)
+    // {
+    //     cout << "fail to convert utf8 string to utf16 string" << endl;
+    // } 
+    // else if (convertor.state().__value.__wch == codecvt_base::result::partial)
+    // {
+    //     cout << "partially convert some characters" << endl;
+    // }
     return utf16_le;
 }
 
