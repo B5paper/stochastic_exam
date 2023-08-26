@@ -19,9 +19,10 @@ void init_wide_char_environment()
 
 int main(int argc, char* argv[])
 {
+    init_wide_char_environment();  // 这个函数可能会对 rdbuf 有影响
+    // 因此在程序刚开始的时候就初始化宽字符环境
     unordered_map<string, string> args = parse_args(argc, argv);
     ExamInfo exam_info = get_exam_info_from_args(args);
-    init_wide_char_environment();
     examine(exam_info);
     // examine(args["type"], args["file"], args["mode"]);
     return 0;
