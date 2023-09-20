@@ -5,6 +5,12 @@
 
 extern char os_path_sep;
 
+void args_to_pairs(unordered_map<string, string> &args, int argc, char **argv)
+{
+
+}
+
+
 unordered_map<string, string> parse_args(int argc, char* argv[])
 {
     /*
@@ -14,7 +20,15 @@ unordered_map<string, string> parse_args(int argc, char* argv[])
         --mode {prev | new | prev_rand | seq}
     */
     unordered_map<string, string> args;
+
+    // args to pairs
     args["exe_path"] = argv[0];
+    for (int i = 1; i < argc - 1; i += 2)
+    {
+        args[argv[i]] = argv[i+1];
+    }
+    return args;
+
     for (int i = 1; i < argc; ++i)
     {
         if (argv[i] == string("--file"))
@@ -31,8 +45,15 @@ unordered_map<string, string> parse_args(int argc, char* argv[])
         }
         else if (argv[i] == string("--domain"))
         {
-            args.insert(make_pair("domain", ""));
-            // args.insert(make_pair("domain", argv[i+1]));
+            args.emplace("mode", argv[i+1]);
+        }
+        else if (argv[i] == "file_path")
+        {
+            args.emplace("file_path", argv[i+1]);
+        }
+        else if (argv[i] == "meta_info_path")
+        {
+            args.emplace("meta_info_path", argv[i+1]);
         }
         else
         {
@@ -95,35 +116,11 @@ ExamInfo select_domain(vector<DomainInfo> domain_infos)
     return exam_info;
 }
 
-ExamInfo fill_exam_info_interactively(string exe_path)
+ExamInfo fill_exam_info_interactively(string &domain_db_path)
 {
-    string exe_dir_path = get_dir(exe_path);
-    string default_file_path = exe_dir_path + os_path_sep + "domain_db_path.txt";
-    // if (exist(default_file_path))
-    // {
-    //     string domain_db_path = read_file_to_lines_utf8(default_file_path)[0];
-    //     cout << "use default domain database file: " << domain_db_path << endl;
-    // }
-    // else
-    // {
-    //     cout << "init the default domain database file path:" << endl;
-    //     string domain_db_path;
-    //     cin >> domain_db_path;
-    //     create_file(default_file_path);
-    //     fwrite(domain_db_path);
-    // }
-    vector<string> lines = read_file_to_lines_utf8(default_file_path);
-    // 这个地方有 bug。如果 domain_db_path.txt 只有一行，并且没有换行，那么第一行不会读取出来
-    if (lines.empty())
-    {
-        cout << "The content of file " << default_file_path << " is empty." << endl;
-        exit(-1);
-    }
-    string domain_db_path = lines[0];
-    vector<DomainInfo> domain_infos = parse_domain_db(domain_db_path);
-    
+    vector<DomainInfo> domain_qa_infos = parse_domain_db(domain_db_path);
     ExamInfo exam_info;
-    exam_info = select_domain(domain_infos);
+    exam_info = select_domain(domain_qa_infos);
     exam_info.mode = select_mode();
     return exam_info;
 }
@@ -143,17 +140,38 @@ string select_mode()
     return mode;
 }
 
-ExamInfo get_exam_info_from_args(const unordered_map<string, string> &args)
+ExamInfo get_exam_info_from_args(unordered_map<string, string> &args)
 {
     cout << endl;
     ExamInfo exam_info;
-    if (args.find("domain") != args.end())
+    if (args.find("--mode") == args.end())
     {
-        exam_info = fill_exam_info_interactively(args.at("exe_path"));
-        cout << endl;
-        return exam_info;
+        cout << "unsupported arguments" << endl;
+        exit(-1);
+    }
+    if (args["--mode"] != "domain")
+    {
+        cout << "unsupported mode" << endl;
+        exit(-1);
+    }
+    if (args.find("--meta_info_path") == args.end())
+    {
+        cout << "domain mode must come with --meta_info_path arg" << endl;
+        exit(-1);
     }
 
+    // --mode domain
+    string meta_info_path = args["--meta_info_path"];
+    vector<string> lines = read_file_to_lines_utf8(meta_info_path);
+    if (lines.empty())
+    {
+        cout << "the meta info path is empty" << endl;
+    }
+    string domain_db_path = lines[0];
+    exam_info = fill_exam_info_interactively(domain_db_path);
+    cout << endl;
+    return exam_info;
+    
     if (args.find("mode") == args.end())
     {
         exam_info.mode = "prev";

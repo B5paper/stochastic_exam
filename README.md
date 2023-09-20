@@ -31,11 +31,7 @@ Obviously, there are two types of qa: `unit` and `word`. Currently the type `wor
 
 Usage:
 
-`./main --domain`
-
-or
-
-`./main --domain </path/to/domain_db_path.txt>`
+`./main --mode domain --meta_info_path <file_path>`
 
 ### direct mode
 

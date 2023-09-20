@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
 {
     init_wide_char_environment();  // 这个函数可能会对 rdbuf 有影响
     // 因此在程序刚开始的时候就初始化宽字符环境
-    unordered_map<string, string> args = parse_args(argc, argv);
+    unordered_map<string, string> args = move(parse_args(argc, argv));
     ExamInfo exam_info = get_exam_info_from_args(args);
     examine(exam_info);
     // examine(args["type"], args["file"], args["mode"]);
@@ -35,4 +35,8 @@ int main(int argc, char* argv[])
 // ./main.exe --type unit --file xxx --mode hist [--spec <hash_value>]
 // 其中 hist 表示 history，spec 表示 specification
 // <hash_value> 表示某个 [state] 的哈希值，类似 git log
+
+// 2. 数据库里必须同时指定 note 文件和对应的 log 文件存放的位置
+// ./main --mode domain --meta_info_path <file_path>
+// ./main --mode single_file --file_path <file_path>
 
