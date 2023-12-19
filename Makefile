@@ -1,5 +1,5 @@
 objs = parse_args.o display.o examine.o file_and_encoding.o main.o \
-	materials_processing.o sample.o state.o tests.o system_info.o
+	materials_processing.o sample.o state.o tests.o
 
 main: $(objs)
 	g++ -g $(objs) -o main
@@ -30,10 +30,6 @@ state.o: state.cpp
 
 tests.o: tests.cpp
 	g++ -g -c tests.cpp -o tests.o
-
-system_info.o: system_info.cpp
-	g++ -g -c system_info.cpp -o system_info.o
-
 
 clean:
 	rm -f $(objs) main

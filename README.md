@@ -31,7 +31,13 @@ Obviously, there are two types of qa: `unit` and `word`. Currently the type `wor
 
 Usage:
 
-`./main --mode domain --meta_info_path <file_path>`
+* `./main --mode domain --meta_info_path <file_path>`
+
+    Run command `./main` without arguments will defaultly use `domain` mode and search meta info file `meta_info.txt` at the same directory containing `main`.
+
+* `./main --mode list --meta_info_path <file_path>`
+
+    list all entities of a note file.
 
 ### direct mode
 

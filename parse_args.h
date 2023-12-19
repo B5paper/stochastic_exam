@@ -1,5 +1,5 @@
-#ifndef PARSE_ARGS
-#define PARSE_ARGS
+#ifndef PARSE_ARGS_H
+#define PARSE_ARGS_H
 #include "examine.h"
 #include <unordered_map>
 #include <string>

@@ -121,6 +121,19 @@ void examine_words(string file_path, string mode)
         examine_words_prev(file_path);
     else if (mode == "prev_rand")
         examine_words_prev_rand(file_path);
+    else if (mode == "seq")
+    {
+        vector<int> sample_indices;
+        vector<WordEntry> words = get_words(file_path);
+        for (int i = 0; i < words.size(); ++i)
+            sample_indices.push_back(i);
+        for (int idx: sample_indices)
+        {
+            cout << "idx: " << idx << endl;
+            display_word_in_qa_mode(words[idx]);
+            cout << endl;
+        }
+    }
     else
     {
         cout << "unknown mode: " << mode << endl;

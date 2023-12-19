@@ -3,7 +3,6 @@
 #include <iostream>
 #include <cstring>
 #include <ctime>
-#include "system_info.h"
 
 // Date::Date(int year, int month, int day, int hour, int minute)
 // {
@@ -92,6 +91,8 @@ void State::save_state()
         exit(1);
     }
 
+    char os_path_sep = get_os_path_sep();
+
     string suffix = "_exam_db";
     int i = file_path.size() - 1;
     while (i >= 0 && file_path[i] != os_path_sep)
@@ -166,6 +167,7 @@ string State::get_db_path_from_file_path(string file_path)
 {
     string dir = get_dir(file_path);
     string base_name = get_base_name(file_path);
+    char os_path_sep = get_os_path_sep();
     string db_path = dir + os_path_sep + base_name + suffix;
     return db_path;
 }

@@ -5,9 +5,25 @@
 #include <cstring>
 #include <algorithm>
 #include <iostream>
-#include "system_info.h"
 
-extern char os_path_sep;
+void init_wide_char_env()
+{
+    // wchar environment initializaiton
+    std::ios_base::sync_with_stdio(false);
+    std::locale utf8( std::locale(), new std::codecvt_utf8_utf16<wchar_t> );
+    std::wcout.imbue(utf8);
+}
+
+char get_os_path_sep()
+{
+    // 目前只能靠编译器在编译阶段识别程序的运行环境
+    #ifdef __linux__
+    char os_path_sep = '/';
+    #else
+    char os_path_sep = '\\';
+    #endif
+    return os_path_sep;
+}
 
 string read_file(const string &file_path)
 {
@@ -191,6 +207,7 @@ string get_dir(string file_path)
 {
     int n = file_path.size();
     int i = n - 1;
+    char os_path_sep = get_os_path_sep();
     while (i > -1 && file_path[i] != os_path_sep)
         --i;
     // if the file_path is merely a file name, the dir path should be .
@@ -203,6 +220,7 @@ string get_base_name(string file_path)
 {
     int n = file_path.size();
     int i = n - 1;
+    char os_path_sep = get_os_path_sep();
     while (i > -1 && file_path[i] != os_path_sep)
         --i;
     int j = n - 1;

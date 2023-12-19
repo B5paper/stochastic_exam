@@ -1,9 +1,6 @@
 #include "parse_args.h"
 #include "file_and_encoding.h"
 #include <iostream>
-#include "system_info.h"
-
-extern char os_path_sep;
 
 void args_to_pairs(unordered_map<string, string> &args, int argc, char **argv)
 {
@@ -70,6 +67,7 @@ vector<DomainInfo> parse_domain_db(string domain_db_path)
     string dir_path = get_dir(domain_db_path);
     string file_path;
     vector<DomainInfo> domain_infos;
+    char os_path_sep = get_os_path_sep();
     for (int i = 0; i < lines.size(); ++i)
     {
         if (lines[i] == "" || lines[i] == "\n")
@@ -140,10 +138,44 @@ string select_mode()
     return mode;
 }
 
+// 是直接指定一个文件，还是列出所有领域，然后一个一个挑选
+enum EXAM_SELECTION_MODE
+{
+    DIRECT,
+    DOMAIN
+};
+
+EXAM_SELECTION_MODE get_exam_selection_mode(unordered_map<string, string> &args)
+{
+    if (args.find("--mode") != args.end() && args["--mode"] == "domain")
+    {
+        return DOMAIN;
+    }
+
+    if (args.find("--domain") == args.end())
+    {
+        return DOMAIN;
+    }
+
+    return DIRECT;
+}
+
 ExamInfo get_exam_info_from_args(unordered_map<string, string> &args)
 {
     cout << endl;
     ExamInfo exam_info;
+
+    // default mode
+    // --mode domain --meta_info_path <same_dir_with_exe>/meta_info.txt
+    if (args.size() == 1)
+    {
+        string exe_path = args["exe_path"];
+        char os_path_sep = get_os_path_sep();
+        string meta_info_path = get_dir(exe_path) + os_path_sep + "meta_info.txt";
+        // not completed
+
+    }
+
     if (args.find("--mode") == args.end())
     {
         cout << "unsupported arguments" << endl;

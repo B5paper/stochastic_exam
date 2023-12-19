@@ -5,8 +5,8 @@
 #include <vector>
 using namespace std;
 
-extern char os_path_sep;
 
+char get_os_path_sep();
 string read_file(const string &file_path);
 vector<wstring> read_file_to_lines_r(const string &file_path);
 vector<wstring> read_file_to_lines(const string &file_path);
@@ -19,5 +19,6 @@ vector<wstring> filter_out_empty_lines(vector<wstring> &lines);
 void trim_newline(vector<wstring> &lines);
 string get_dir(string file_path);
 string get_base_name(string file_path);
+void init_wide_char_env();
 
 #endif
